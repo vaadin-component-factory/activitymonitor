@@ -20,7 +20,7 @@ To see the demo, navigate to http://localhost:8080/. Watch your console for the 
 
 ## Release notes
 
-### Version 1.0-SNAPSHOT
+### Version 1.0
 - Initial release
 
 Supports the ACTIVE, IDLE and INACTIVE states as well as user-defined custom timers.

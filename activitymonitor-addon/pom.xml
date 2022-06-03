@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.addons</groupId>
 	<artifactId>activitymonitor</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>ActivityMonitor Add-on</name>
 
 	<prerequisites>
@@ -28,24 +28,22 @@
 		<Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
 	</properties>
 
-    <!--
 	<organization>
-		<name>My Name</name>
-		<url>https://github.com/mygithubaccount/MyComponent/</url>
+		<name>Vaadin Component Factory</name>
+		<url>https://github.com/vaadin-component-factory/activitymonitor</url>
 	</organization>
 
 	<scm>
-		<url>git://github.com/mygithubaccount/MyComponent.git</url>
-		<connection>scm:git:git://github.com/mygithubaccount/MyComponent.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/mygithubaccount/${componentClassName}.git</developerConnection>
-		<tag>MyComponent add-on for Vaadin</tag>
+		<url>git://github.com/vaadin-component-factory/activitymonitor.git</url>
+		<connection>scm:git:git://github.com/vaadin-component-factory/activitymonitor.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:vaadin-component-factory/activitymonitor.git</developerConnection>
+		<tag>ActivityMontior add-on for Vaadin</tag>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/mygithubaccount/MyComponent/issues</url>
+		<url>https://github.com/vaadin-component-factory/activitymonitor/issues</url>
 	</issueManagement>
-    -->
 
 	<licenses>
 		<license>

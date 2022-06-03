@@ -16,7 +16,7 @@ mvn clean install
 cd demo
 mvn jetty:run
 
-To see the demo, navigate to http://localhost:8080/
+To see the demo, navigate to http://localhost:8080/. Watch your console for the changes to the client's status.
 
 ## Release notes
 

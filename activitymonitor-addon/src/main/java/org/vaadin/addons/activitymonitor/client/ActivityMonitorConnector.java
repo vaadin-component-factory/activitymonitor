@@ -26,7 +26,8 @@ import com.vaadin.shared.ui.Connect;
 @Connect(org.vaadin.addons.activitymonitor.ActivityMonitor.class)
 public class ActivityMonitorConnector extends AbstractExtensionConnector {
 
-    private static final Logger logger = Logger.getLogger(ActivityMonitorConnector.class.getName());
+    private static final Logger logger = Logger
+            .getLogger(ActivityMonitorConnector.class.getName());
 
     private Timer idleTimer;
     private Timer inactiveTimer;
@@ -74,13 +75,23 @@ public class ActivityMonitorConnector extends AbstractExtensionConnector {
         return (ActivityMonitorState) super.getState();
     }
 
+    private void stopTimers() {
+        idleTimer.cancel();
+        inactiveTimer.cancel();
+        for (CustomTimer ct : customTimers.values()) {
+            ct.cancel();
+        }
+    }
+
     private void resetTimers() {
         ActivityMonitorState state = getState();
 
+        idleTimer.cancel();
         if (state.idleThreshold != 0) {
             idleTimer.schedule(state.idleThreshold);
         }
 
+        inactiveTimer.cancel();
         if (state.inactiveTimeThreshold != 0) {
             inactiveTimer.schedule(state.inactiveTimeThreshold);
         }
@@ -123,12 +134,11 @@ public class ActivityMonitorConnector extends AbstractExtensionConnector {
 
         ActivityMonitorState state = getState();
 
-        if (event.hasPropertyChanged("idleThreshold")) {
-            idleTimer.cancel();
-        }
+        boolean reset = true;
 
-        if (event.hasPropertyChanged("inactiveThreshold")) {
-            inactiveTimer.cancel();
+        if (state.timersEnabled == false) {
+            stopTimers();
+            reset = false;
         }
 
         if (event.hasPropertyChanged("customTimers")) {
@@ -159,7 +169,9 @@ public class ActivityMonitorConnector extends AbstractExtensionConnector {
 
         }
 
-        resetTimers();
+        if (reset) {
+            resetTimers();
+        }
 
     }
 

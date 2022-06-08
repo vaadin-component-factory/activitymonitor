@@ -11,25 +11,23 @@ import org.vaadin.addons.activitymonitor.client.shared.ActivityMonitorState;
 import org.vaadin.addons.activitymonitor.client.shared.ClientStatus;
 
 /**
- * A UI extension that monitors client activity state. When the client
- * moves their mouse, types anything on the keyboard or touches their
- * touchscreen (with the application focused), the client is considered
- * "active". When the client stops interacting with the UI, two timers
- * check for activity thresholds - "idle" and "inactive".
- * The "idle" timer (default: 30 seconds) indicates that the client has
- * stopped interacting with the application. The "inactive" timer (
- * default: 60 seconds) indicates that the client has not interacted with
- * the application for a long time and might be busy doing something else.
+ * A UI extension that monitors client activity state. When the client moves
+ * their mouse, types anything on the keyboard or touches their touchscreen
+ * (with the application focused), the client is considered "active". When the
+ * client stops interacting with the UI, two timers check for activity
+ * thresholds - "idle" and "inactive". The "idle" timer (default: 30 seconds)
+ * indicates that the client has stopped interacting with the application. The
+ * "inactive" timer ( default: 60 seconds) indicates that the client has not
+ * interacted with the application for a long time and might be busy doing
+ * something else.
  *
- * Custom timers can also be added in order to increase granularity.
- * It is worth noting that when a timer fires, a round-trip is initiated
- * by the client. This has the effect of extending the lifetime of the
- * session.
- *  
- * This information can be used to provide present/away indication for
- * real-time chat functionality, or it can be used to throttle data feed
- * speed to inactive clients in order to save on resources, among other
- * things.
+ * Custom timers can also be added in order to increase granularity. It is worth
+ * noting that when a timer fires, a round-trip is initiated by the client. This
+ * has the effect of extending the lifetime of the session.
+ * 
+ * This information can be used to provide present/away indication for real-time
+ * chat functionality, or it can be used to throttle data feed speed to inactive
+ * clients in order to save on resources, among other things.
  */
 public class ActivityMonitor extends AbstractExtension {
 
@@ -47,8 +45,10 @@ public class ActivityMonitor extends AbstractExtension {
         void timerTriggered(String name);
     }
 
-    private final Set<ClientStatusChangeListener> changeListeners = new HashSet<>(1);
-    private final Set<CustomTimerListener> customTimerListeners = new HashSet<>(1);
+    private final Set<ClientStatusChangeListener> changeListeners = new HashSet<>(
+            1);
+    private final Set<CustomTimerListener> customTimerListeners = new HashSet<>(
+            1);
     private ClientStatus status = ClientStatus.ACTIVE;
 
     private final ActivityMonitorRPC rpc = new ActivityMonitorRPC() {
@@ -59,7 +59,7 @@ public class ActivityMonitor extends AbstractExtension {
                 l.statusChanged(status);
             }
         }
-    
+
         @Override
         public void customTimerTriggered(String timerName) {
             for (CustomTimerListener l : customTimerListeners) {
@@ -67,6 +67,16 @@ public class ActivityMonitor extends AbstractExtension {
             }
         }
     };
+
+    @Override
+    protected ActivityMonitorState getState() {
+        return (ActivityMonitorState) super.getState();
+    }
+
+    @Override
+    protected ActivityMonitorState getState(boolean markDirty) {
+        return (ActivityMonitorState) super.getState(markDirty);
+    }
 
     /**
      * Create an ActivityMonitor instance and attach it to the current UI
@@ -78,7 +88,8 @@ public class ActivityMonitor extends AbstractExtension {
     /**
      * Create an ActivityMonitor instance and attach it to an arbitrary UI
      * 
-     * @param ui a UI instance
+     * @param ui
+     *            a UI instance
      */
     public ActivityMonitor(UI ui) {
         extend(ui);
@@ -86,53 +97,49 @@ public class ActivityMonitor extends AbstractExtension {
     }
 
     /**
-     * Enable/start client activity status monitoring.
-     * (Enabled/started by default when ActivityMonitor instance is created).
+     * Enable/start client activity status monitoring. (Enabled/started by
+     * default when ActivityMonitor instance is created).
      */
     public void enable() {
-        getState(true).enabled = true;
+        getState(true).timersEnabled = true;
     }
 
     /**
-     * Disable/stop client activity status monitoring.
-     * (Enabled/started by default when ActivityMonitor instance is created). 
+     * Disable/stop client activity status monitoring. (Enabled/started by
+     * default when ActivityMonitor instance is created).
      */
     public void disable() {
-        getState(true).enabled = false;
+        getState(true).timersEnabled = false;
     }
 
     /**
      * Return true if client activity is being monitored.
+     * 
      * @return a boolean value.
      */
     public boolean isEnabled() {
-        return getState().enabled;
-    }
-
-    @Override
-    protected ActivityMonitorState getState() {
-        return (ActivityMonitorState)super.getState();
-    }
-    @Override
-    protected ActivityMonitorState getState(boolean markDirty) {
-        return (ActivityMonitorState)super.getState(markDirty);
+        return getState().timersEnabled;
     }
 
     /**
      * Add a listener that gets triggered whenever the client's status changes.
      * 
-     * @param listener a ClientStatusChangeListener instance (usually a lambda)
+     * @param listener
+     *            a ClientStatusChangeListener instance (usually a lambda)
      */
-    public void addClientStatusChangeListener(ClientStatusChangeListener listener) {
+    public void addClientStatusChangeListener(
+            ClientStatusChangeListener listener) {
         changeListeners.add(listener);
     }
 
     /**
      * Remove a previously added client status change listener.
      * 
-     * @param listener a previously added ClientStatusChangeListener instance
+     * @param listener
+     *            a previously added ClientStatusChangeListener instance
      */
-    public void removeClientStatusChangeListener(ClientStatusChangeListener listener) {
+    public void removeClientStatusChangeListener(
+            ClientStatusChangeListener listener) {
         changeListeners.remove(listener);
     }
 
@@ -144,12 +151,15 @@ public class ActivityMonitor extends AbstractExtension {
     }
 
     /**
-     * Add a named timer with a custom threshold. This function is provided
-     * to allow for additional granularity in the activity levels. No custom
-     * timers will run unless they're added.
+     * Add a named timer with a custom threshold. This function is provided to
+     * allow for additional granularity in the activity levels. No custom timers
+     * will run unless they're added.
      * 
-     * @param name name of the timer. Used for identifying the timer in the listener.
-     * @param threshold time of inactivity until timer fires, in milliseconds
+     * @param name
+     *            name of the timer. Used for identifying the timer in the
+     *            listener.
+     * @param threshold
+     *            time of inactivity until timer fires, in milliseconds
      */
     public void addCustomTimer(String name, int threshold) {
         getState(true).customTimers.put(name, threshold);
@@ -158,8 +168,10 @@ public class ActivityMonitor extends AbstractExtension {
     /**
      * Update the threshold for a custom timer.
      * 
-     * @param name name of timer. Used for identifying the timer in the listener.
-     * @param threshold time of inactivity until timer fires, in milliseconds
+     * @param name
+     *            name of timer. Used for identifying the timer in the listener.
+     * @param threshold
+     *            time of inactivity until timer fires, in milliseconds
      */
     public void setCustomTimerThreshold(String name, int threshold) {
         if (getState().customTimers.remove(name) != null) {
@@ -171,7 +183,8 @@ public class ActivityMonitor extends AbstractExtension {
      * Remove a custom timer. This also removes and stops the associated
      * client-side timer object.
      * 
-     * @param name name of a previously added custom timer.
+     * @param name
+     *            name of a previously added custom timer.
      */
     public void removeCustomTimer(String name) {
         getState(true).customTimers.remove(name);
@@ -186,14 +199,15 @@ public class ActivityMonitor extends AbstractExtension {
 
     /**
      * Add a custom timer listener. This function gets called whenever a custom
-     * timer fires (i.e. when the user has been idle for longer than the specified
-     * amount of time). The custom timer can be identified by the name string
-     * provided as the listener function parameter.
+     * timer fires (i.e. when the user has been idle for longer than the
+     * specified amount of time). The custom timer can be identified by the name
+     * string provided as the listener function parameter.
      * 
-     * Note, that adding a custom timer or modifying its interval will cause
-     * all existing custom timers to be reset for that client.
+     * Note, that adding a custom timer or modifying its interval will cause all
+     * existing custom timers to be reset for that client.
      * 
-     * @param listener a listener instance or lambda
+     * @param listener
+     *            a listener instance or lambda
      */
     public void addCustomTimerListener(CustomTimerListener listener) {
         customTimerListeners.add(listener);
@@ -202,7 +216,8 @@ public class ActivityMonitor extends AbstractExtension {
     /**
      * Remove a previously added custom timer listener.
      * 
-     * @param listener reference to the listener function object.
+     * @param listener
+     *            reference to the listener function object.
      */
     public void removeCustomTimerListener(CustomTimerListener listener) {
         customTimerListeners.remove(listener);
@@ -216,19 +231,22 @@ public class ActivityMonitor extends AbstractExtension {
     }
 
     /**
-     * Set the idle time threshold - the client is considered to be
-     * 'idle' after this many milliseconds. Default: 30 seconds
-     * (30000 msec).
+     * Set the idle time threshold - the client is considered to be 'idle' after
+     * this many milliseconds. Set this to 0 to disable the idle threshold
+     * timer.
      * 
-     * @param msec time in milliseconds
+     * Default: 30 seconds (30000 msec).
+     * 
+     * @param msec
+     *            time in milliseconds
      */
     public void setIdleTimeThreshold(int msec) {
         getState(true).idleThreshold = Math.max(msec, 0);
     }
 
     /**
-     * Get the current value for the idle time threshold. A client is
-     * considered adle after this many milliseconds.
+     * Get the current value for the idle time threshold. A client is considered
+     * adle after this many milliseconds.
      * 
      * @return time in milliseconds (default: 30000).
      */
@@ -237,19 +255,23 @@ public class ActivityMonitor extends AbstractExtension {
     }
 
     /**
-     * Set the inactivity time threshold - the client is considered
-     * to be inactive (i.e. left the desk) after this many milliseconds.
+     * Set the inactivity time threshold - the client is considered to be
+     * inactive (i.e. left the desk) after this many milliseconds.
+     * 
+     * Set this to 0 to disable the inactive threshold timer.
+     * 
      * Default: 60 seconds (60000 msec).
      * 
-     * @param msec time in milliseconds
+     * @param msec
+     *            time in milliseconds
      */
     public void setInactiveTimeThreshold(int msec) {
         getState(true).inactiveTimeThreshold = Math.max(msec, 0);
     }
 
     /**
-     * Get the current value for the inactivity time threshold. The
-     * client is considered inactive after this many milliseconds.
+     * Get the current value for the inactivity time threshold. The client is
+     * considered inactive after this many milliseconds.
      * 
      * @return time in milliseconds (default: 60000).
      */
@@ -258,9 +280,9 @@ public class ActivityMonitor extends AbstractExtension {
     }
 
     /**
-     * Check if client is currently considered "active", i.e. has
-     * touched an input device around the application before the
-     * idle (and inactivity) timers have triggered.
+     * Check if client is currently considered "active", i.e. has touched an
+     * input device around the application before the idle (and inactivity)
+     * timers have triggered.
      * 
      * @return true neither 'idle' nor 'inactive' timers have been exceeded.
      */

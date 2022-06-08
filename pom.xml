@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.addons.componentfactory</groupId>
 	<artifactId>activitymonitor-root</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<name>ActivityMonitor Add-on Root Project</name>
 
 	<prerequisites>

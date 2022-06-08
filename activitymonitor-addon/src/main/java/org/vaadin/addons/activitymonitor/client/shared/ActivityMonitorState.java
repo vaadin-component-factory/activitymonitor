@@ -9,6 +9,7 @@ public class ActivityMonitorState extends SharedState {
 
     public int idleThreshold = 30000;
     public int inactiveTimeThreshold = 60000;
+    public boolean timersEnabled = true;
 
     public Map<String, Integer> customTimers = new HashMap<>(1);
 

@@ -19,8 +19,7 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("demo")
 @Title("ActtivityMonitor Add-on Demo")
 @Widgetset("org.vaadin.addons.activitymonitor.WidgetSet")
-public class DemoUI extends UI
-{
+public class DemoUI extends UI {
 
     @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(productionMode = false, ui = DemoUI.class)
@@ -37,19 +36,18 @@ public class DemoUI extends UI
         // Show it in the middle of the screen
         final VerticalLayout layout = new VerticalLayout();
         layout.setStyleName("demoContentLayout");
-        
+
         final TextField name = new TextField();
         name.setCaption("Type your name here:");
 
         Button button = new Button("Click Me");
         button.addClickListener(e -> {
-            layout.addComponent(new Label("Thanks " + name.getValue() 
-                    + ", it works!"));
+            layout.addComponent(
+                    new Label("Thanks " + name.getValue() + ", it works!"));
         });
-        
+
         layout.addComponents(name, button);
         setContent(layout);
-
 
         ////////////////////////////////
         // ActivityMonitor setup
@@ -71,10 +69,14 @@ public class DemoUI extends UI
         ////////////////////////////////////////////////////////////////////////////
 
         layout.addComponents(
-            new Label("Idle time threshold is " + (monitor.getIdleTimeThreshold() / 1000) + " seconds"),
-            new Label("Inactive time threshold is " + (monitor.getInactiveTimeThreshold() / 1000) + " seconds"),
-            new Label("Custom timer \"A\" set to a threshold of 15 seconds"),
-            new Label("Custom timer \"B\" set to a threshold of 20 seconds")
-        );
+                new Label("Idle time threshold is "
+                        + (monitor.getIdleTimeThreshold() / 1000) + " seconds"),
+                new Label("Inactive time threshold is "
+                        + (monitor.getInactiveTimeThreshold() / 1000)
+                        + " seconds"),
+                new Label(
+                        "Custom timer \"A\" set to a threshold of 15 seconds"),
+                new Label(
+                        "Custom timer \"B\" set to a threshold of 20 seconds"));
     }
 }
